@@ -38,6 +38,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * For a given BLE device, this Activity provides the user interface to connect, display data,
@@ -61,9 +62,12 @@ public class DeviceControlActivity extends Activity {
             new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
     private boolean mConnected = false;
     private BluetoothGattCharacteristic mNotifyCharacteristic;
+    private BluetoothGattCharacteristic bluetoothGattCharacteristicHM_10;
+
 
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
+
 
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -109,6 +113,20 @@ public class DeviceControlActivity extends Activity {
                 displayGattServices(mBluetoothLeService.getSupportedGattServices());
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+
+                //Echo back received data, with something inserted
+                final byte[] rxBytes = bluetoothGattCharacteristicHM_10.getValue();
+                final byte[] insertSomething = {(byte)'\n'};
+                byte[] txBytes = new byte[insertSomething.length + rxBytes.length];
+                System.arraycopy(insertSomething, 0, txBytes, 0, insertSomething.length);
+                System.arraycopy(rxBytes, 0, txBytes, insertSomething.length, rxBytes.length);
+
+                if(bluetoothGattCharacteristicHM_10 != null){
+                    bluetoothGattCharacteristicHM_10.setValue(txBytes);
+                    mBluetoothLeService.writeCharacteristic(bluetoothGattCharacteristicHM_10);
+                    mBluetoothLeService.setCharacteristicNotification(bluetoothGattCharacteristicHM_10,true);
+                }
+
             }
         }
     };
@@ -135,12 +153,17 @@ public class DeviceControlActivity extends Activity {
                                 mNotifyCharacteristic = null;
                             }
                             mBluetoothLeService.readCharacteristic(characteristic);
+
                         }
                         if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
                             mNotifyCharacteristic = characteristic;
                             mBluetoothLeService.setCharacteristicNotification(
                                     characteristic, true);
+
                         }
+
+
+
                         return true;
                     }
                     return false;
@@ -172,7 +195,11 @@ public class DeviceControlActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
+
     }
+
+
 
     @Override
     protected void onResume() {
@@ -245,6 +272,9 @@ public class DeviceControlActivity extends Activity {
     // In this sample, we populate the data structure that is bound to the ExpandableListView
     // on the UI.
     private void displayGattServices(List<BluetoothGattService> gattServices) {
+        UUID UUID_HM_10 =
+                UUID.fromString(SampleGattAttributes.HM_10);
+
         if (gattServices == null) return;
         String uuid = null;
         String unknownServiceString = getResources().getString(R.string.unknown_service);
@@ -279,6 +309,11 @@ public class DeviceControlActivity extends Activity {
                         LIST_NAME, SampleGattAttributes.lookup(uuid, unknownCharaString));
                 currentCharaData.put(LIST_UUID, uuid);
                 gattCharacteristicGroupData.add(currentCharaData);
+                //Check if it is "HM_10"
+                if(uuid.equals(SampleGattAttributes.HM_10)){
+                    bluetoothGattCharacteristicHM_10 = gattService.getCharacteristic(UUID_HM_10);
+
+                }
             }
             mGattCharacteristics.add(charas);
             gattCharacteristicData.add(gattCharacteristicGroupData);

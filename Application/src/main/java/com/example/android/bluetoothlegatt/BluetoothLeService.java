@@ -64,7 +64,7 @@ public class BluetoothLeService extends Service {
             "com.example.bluetooth.le.EXTRA_DATA";
 
     public final static UUID UUID_HEART_RATE_MEASUREMENT =
-            UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
+            UUID.fromString(SampleGattAttributes.HM_10);
 
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
@@ -122,7 +122,7 @@ public class BluetoothLeService extends Service {
     private void broadcastUpdate(final String action,
                                  final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
-
+    /*
         // This is special handling for the Heart Rate Measurement profile.  Data parsing is
         // carried out as per profile specifications:
         // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
@@ -148,6 +148,21 @@ public class BluetoothLeService extends Service {
                     stringBuilder.append(String.format("%02X ", byteChar));
                 intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
             }
+        }*/
+        Log.v("AndroidLE", "broadcastUpdate()");
+
+        final byte[] data = characteristic.getValue();
+
+        Log.v("AndroidLE", "data.length: " + data.length);
+
+        if (data != null && data.length > 0) {
+            final StringBuilder stringBuilder = new StringBuilder(data.length);
+            for(byte byteChar : data) {
+                stringBuilder.append(String.format("%02X ", byteChar));
+
+                Log.v("AndroidLE", String.format("%02X ", byteChar));
+            }
+            intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
         }
         sendBroadcast(intent);
     }
@@ -282,6 +297,18 @@ public class BluetoothLeService extends Service {
         mBluetoothGatt.readCharacteristic(characteristic);
     }
 
+    /**
+     * Write to a given char
+     * @param characteristic The characteristic to write to
+     */
+    public void writeCharacteristic(BluetoothGattCharacteristic characteristic) {
+        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+            Log.w(TAG, "BluetoothAdapter not initialized");
+            return;
+        }
+
+        mBluetoothGatt.writeCharacteristic(characteristic);
+    }
     /**
      * Enables or disables notification on a give characteristic.
      *
