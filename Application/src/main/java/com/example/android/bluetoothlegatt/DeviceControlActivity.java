@@ -31,6 +31,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
@@ -63,6 +65,18 @@ public class DeviceControlActivity extends Activity {
     private boolean mConnected = false;
     private BluetoothGattCharacteristic mNotifyCharacteristic;
     private BluetoothGattCharacteristic bluetoothGattCharacteristicHM_10;
+    private Button send;
+    private EditText text;
+    private Button hardware;
+    private Button bluetooth;
+    private Button up;
+    private Button down;
+    private Button emerstop;
+    private Button stop;
+    private TextView mode;
+    private TextView speed;
+    private int SPEED = 0;
+    private String MODE = "HARDWARE";
 
 
     private final String LIST_NAME = "NAME";
@@ -168,7 +182,7 @@ public class DeviceControlActivity extends Activity {
                     }
                     return false;
                 }
-    };
+            };
 
     private void clearUI() {
         mGattServicesList.setAdapter((SimpleExpandableListAdapter) null);
@@ -190,6 +204,172 @@ public class DeviceControlActivity extends Activity {
         mGattServicesList.setOnChildClickListener(servicesListClickListner);
         mConnectionState = (TextView) findViewById(R.id.connection_state);
         mDataField = (TextView) findViewById(R.id.data_value);
+        send = (Button) findViewById(R.id.send);
+        text = (EditText) findViewById(R.id.tt);
+        hardware = (Button) findViewById(R.id.hardware);
+        bluetooth = (Button) findViewById(R.id.bluetooth);
+        up = (Button) findViewById(R.id.up);
+        down = (Button) findViewById(R.id.down);
+        emerstop = (Button) findViewById(R.id.emerstop);
+        stop = (Button) findViewById(R.id.stop);
+        mode = (TextView) findViewById(R.id.mode);
+        speed = (TextView) findViewById(R.id.speed);
+
+        speed.setText(Integer.toString(SPEED));
+        mode.setText(MODE);
+
+        send.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                final byte[] rxBytes = text.getText().toString().getBytes();
+                final byte[] insertSomething = {(byte)'\n'};
+                byte[] txBytes = new byte[insertSomething.length + rxBytes.length];
+                System.arraycopy(insertSomething, 0, txBytes, 0, insertSomething.length);
+                System.arraycopy(rxBytes, 0, txBytes, insertSomething.length, rxBytes.length);
+
+                if(bluetoothGattCharacteristicHM_10 != null){
+                    bluetoothGattCharacteristicHM_10.setValue(txBytes);
+                    mBluetoothLeService.writeCharacteristic(bluetoothGattCharacteristicHM_10);
+                    mBluetoothLeService.setCharacteristicNotification(bluetoothGattCharacteristicHM_10,true);
+                }
+            }
+        });
+
+        hardware.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bluetoothGattCharacteristicHM_10 != null){
+                    String str = "T0";
+                    final byte[] rxBytes = str.getBytes();
+                    final byte[] insertSomething = {(byte)'\n'};
+                    byte[] txBytes = new byte[insertSomething.length + rxBytes.length];
+                    System.arraycopy(insertSomething, 0, txBytes, 0, insertSomething.length);
+                    System.arraycopy(rxBytes, 0, txBytes, insertSomething.length, rxBytes.length);
+
+                    MODE = "HARDWARE";
+                    SPEED = 0;
+                    mode.setText(MODE);
+                    speed.setText(Integer.toString(SPEED));
+
+                    bluetoothGattCharacteristicHM_10.setValue(txBytes);
+                    mBluetoothLeService.writeCharacteristic(bluetoothGattCharacteristicHM_10);
+                    mBluetoothLeService.setCharacteristicNotification(bluetoothGattCharacteristicHM_10,true);
+                }
+            }
+        });
+
+        bluetooth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bluetoothGattCharacteristicHM_10 != null){
+                    String str = "T1";
+                    final byte[] rxBytes = str.getBytes();
+                    final byte[] insertSomething = {(byte)'\n'};
+                    byte[] txBytes = new byte[insertSomething.length + rxBytes.length];
+                    System.arraycopy(insertSomething, 0, txBytes, 0, insertSomething.length);
+                    System.arraycopy(rxBytes, 0, txBytes, insertSomething.length, rxBytes.length);
+
+                    MODE = "BLUETOOTH";
+                    mode.setText(MODE);
+
+                    bluetoothGattCharacteristicHM_10.setValue(txBytes);
+                    mBluetoothLeService.writeCharacteristic(bluetoothGattCharacteristicHM_10);
+                    mBluetoothLeService.setCharacteristicNotification(bluetoothGattCharacteristicHM_10,true);
+                }
+            }
+        });
+
+        up.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bluetoothGattCharacteristicHM_10 != null && MODE.equals("BLUETOOTH")){
+                    SPEED += 1;
+                    String str = "";
+                    if(SPEED >= 0)
+                        str = "F" + SPEED;
+                    else if(SPEED < 0)
+                        str = "B" + SPEED * -1;
+                    final byte[] rxBytes = str.getBytes();
+                    final byte[] insertSomething = {(byte)'\n'};
+                    byte[] txBytes = new byte[insertSomething.length + rxBytes.length];
+                    System.arraycopy(insertSomething, 0, txBytes, 0, insertSomething.length);
+                    System.arraycopy(rxBytes, 0, txBytes, insertSomething.length, rxBytes.length);
+
+                    speed.setText(Integer.toString(SPEED));
+
+                    bluetoothGattCharacteristicHM_10.setValue(txBytes);
+                    mBluetoothLeService.writeCharacteristic(bluetoothGattCharacteristicHM_10);
+                    mBluetoothLeService.setCharacteristicNotification(bluetoothGattCharacteristicHM_10,true);
+                }
+            }
+        });
+
+        down.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bluetoothGattCharacteristicHM_10 != null && MODE.equals("BLUETOOTH")){
+                    SPEED -= 1;
+                    String str = "";
+                    if(SPEED >= 0)
+                        str = "F" + SPEED;
+                    else if(SPEED < 0)
+                        str = "B" + SPEED * -1;
+                    final byte[] rxBytes = str.getBytes();
+                    final byte[] insertSomething = {(byte)'\n'};
+                    byte[] txBytes = new byte[insertSomething.length + rxBytes.length];
+                    System.arraycopy(insertSomething, 0, txBytes, 0, insertSomething.length);
+                    System.arraycopy(rxBytes, 0, txBytes, insertSomething.length, rxBytes.length);
+
+                    speed.setText(Integer.toString(SPEED));
+
+                    bluetoothGattCharacteristicHM_10.setValue(txBytes);
+                    mBluetoothLeService.writeCharacteristic(bluetoothGattCharacteristicHM_10);
+                    mBluetoothLeService.setCharacteristicNotification(bluetoothGattCharacteristicHM_10,true);
+                }
+            }
+        });
+
+        emerstop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bluetoothGattCharacteristicHM_10 != null){
+                    String str = "E";
+                    final byte[] rxBytes = str.getBytes();
+                    final byte[] insertSomething = {(byte)'\n'};
+                    byte[] txBytes = new byte[insertSomething.length + rxBytes.length];
+                    System.arraycopy(insertSomething, 0, txBytes, 0, insertSomething.length);
+                    System.arraycopy(rxBytes, 0, txBytes, insertSomething.length, rxBytes.length);
+
+                    SPEED = 0;
+                    speed.setText(Integer.toString(SPEED));
+
+                    bluetoothGattCharacteristicHM_10.setValue(txBytes);
+                    mBluetoothLeService.writeCharacteristic(bluetoothGattCharacteristicHM_10);
+                    mBluetoothLeService.setCharacteristicNotification(bluetoothGattCharacteristicHM_10,true);
+                }
+            }
+        });
+
+        stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bluetoothGattCharacteristicHM_10 != null){
+                    String str = "Z";
+                    final byte[] rxBytes = str.getBytes();
+                    final byte[] insertSomething = {(byte)'\n'};
+                    byte[] txBytes = new byte[insertSomething.length + rxBytes.length];
+                    System.arraycopy(insertSomething, 0, txBytes, 0, insertSomething.length);
+                    System.arraycopy(rxBytes, 0, txBytes, insertSomething.length, rxBytes.length);
+
+                    SPEED = 0;
+                    speed.setText(Integer.toString(SPEED));
+
+                    bluetoothGattCharacteristicHM_10.setValue(txBytes);
+                    mBluetoothLeService.writeCharacteristic(bluetoothGattCharacteristicHM_10);
+                    mBluetoothLeService.setCharacteristicNotification(bluetoothGattCharacteristicHM_10,true);
+                }
+            }
+        });
 
         getActionBar().setTitle(mDeviceName);
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -198,8 +378,6 @@ public class DeviceControlActivity extends Activity {
 
 
     }
-
-
 
     @Override
     protected void onResume() {
@@ -288,6 +466,8 @@ public class DeviceControlActivity extends Activity {
         for (BluetoothGattService gattService : gattServices) {
             HashMap<String, String> currentServiceData = new HashMap<String, String>();
             uuid = gattService.getUuid().toString();
+            if(!uuid.equals("0000ffe0-0000-1000-8000-00805f9b34fb"))
+                continue;
             currentServiceData.put(
                     LIST_NAME, SampleGattAttributes.lookup(uuid, unknownServiceString));
             currentServiceData.put(LIST_UUID, uuid);

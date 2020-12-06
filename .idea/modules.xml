@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Application/Application.iml" filepath="$PROJECT_DIR$/.idea/modules/Application/Application.iml" group="BluetoothLeGatt2/Application" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/BluetoothLeGatt2.iml" filepath="$PROJECT_DIR$/.idea/modules/BluetoothLeGatt2.iml" group="BluetoothLeGatt2" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Application/Application.iml" filepath="$PROJECT_DIR$/.idea/modules/Application/Application.iml" group="BleConnection/Application" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/BleConnection.iml" filepath="$PROJECT_DIR$/.idea/modules/BleConnection.iml" group="BleConnection" />
     </modules>
   </component>
 </project>

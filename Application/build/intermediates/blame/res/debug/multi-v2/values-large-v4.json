@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\User\\AndroidStudioProjects\\BluetoothLeGatt2\\Application\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-large-v4\\values-large-v4.xml",
+            "outputFile": "C:\\Users\\JonghyeokLee\\Desktop\\CartController\\BleConnection\\Application\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-large-v4\\values-large-v4.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\User\\.gradle\\caches\\transforms-2\\files-2.1\\24673ade0137f642313357857be8fe19\\res\\values-large-v4\\values-large-v4.xml",
+                    "source": "C:\\Users\\JonghyeokLee\\.gradle\\caches\\transforms-2\\files-2.1\\d36637e711f1f57fa3e965f9514c962a\\res\\values-large-v4\\values-large-v4.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",

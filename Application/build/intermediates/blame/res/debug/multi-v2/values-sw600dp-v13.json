@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\User\\AndroidStudioProjects\\BluetoothLeGatt2\\Application\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+            "outputFile": "C:\\Users\\JonghyeokLee\\Desktop\\CartController\\BleConnection\\Application\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-sw600dp-v13\\values-sw600dp-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\User\\.gradle\\caches\\transforms-2\\files-2.1\\24673ade0137f642313357857be8fe19\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+                    "source": "C:\\Users\\JonghyeokLee\\.gradle\\caches\\transforms-2\\files-2.1\\d36637e711f1f57fa3e965f9514c962a\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -14,14 +14,14 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\User\\AndroidStudioProjects\\BluetoothLeGatt2\\Application\\src\\main\\res\\values-sw600dp\\template-styles.xml",
+                    "source": "C:\\Users\\JonghyeokLee\\Desktop\\CartController\\BleConnection\\Application\\src\\main\\res\\values-sw600dp\\template-styles.xml",
                     "from": {
                         "startLines": "18",
                         "startColumns": "4",
-                        "startOffsets": "621",
+                        "startOffsets": "639",
                         "endLines": "22",
                         "endColumns": "12",
-                        "endOffsets": "861"
+                        "endOffsets": "883"
                     },
                     "to": {
                         "startLines": "12",
@@ -33,13 +33,13 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\User\\AndroidStudioProjects\\BluetoothLeGatt2\\Application\\src\\main\\res\\values-sw600dp\\template-dimens.xml",
+                    "source": "C:\\Users\\JonghyeokLee\\Desktop\\CartController\\BleConnection\\Application\\src\\main\\res\\values-sw600dp\\template-dimens.xml",
                     "from": {
                         "startLines": "20,21",
                         "startColumns": "4,4",
-                        "startOffsets": "656,724",
+                        "startOffsets": "676,745",
                         "endColumns": "67,67",
-                        "endOffsets": "719,787"
+                        "endOffsets": "739,808"
                     },
                     "to": {
                         "startLines": "10,11",
